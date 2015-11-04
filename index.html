@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="bitcoinCalculator" ng-controller="bitcoinController">
   <head>
     <title>Bitcoin Investment Calculator</title>
     <meta charset="utf-8">
@@ -9,15 +9,87 @@
     <!-- scripts -->
   </head>
   <body>
-    <h1>Bitcoin Investment<br>Calculator</h1>
-    <h3>How many Bitcoins do you have?</h3>
-    <!-- model -->
-    <input type="number" ng-model="somenumber" placeholder="20">
-    <br></br>
-    <h4>You have <span class="number">{{ somenumber }}</span> Bitcoins - nice!</h4>
+  <div class="jumbotron">
+        <div class="row">
+          <div class="col-sm-12">
+            <h1>Bitcoin Investment Calculator</h1>
+            <br><br>
+            <form role="form">
+              <label for="starting-investment">Initial Investment (USD)</label>
+              <input type="number" ng-model="initialAmt" class="form-control" placeholder="{{initialAmt}}">
+            </form>
+            <br>
+            <p>Current Price (USD): ${{currRate | currency}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-7">
+            <br><br>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Price of 1 BTC</th>
+                  <th>Starting Investment</th>
+                  <th>Profit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                   <td>$1,000</td>
+                   <td>{{ newAmt(1000) | currency }}</td>
+                   <td>{{ profit(1000) | currency  }}</td>
+                 </tr>
+                 <tr>
+                   <td>$5,000</td>
+                   <td>{{ newAmt(5000) | currency }}</td>
+                   <td>{{ profit(5000) | currency }}</td>
+                 </tr>
+                 <tr>
+                   <td>$10,000</td>
+                   <td>{{ newAmt(10000) | currency  }}</td>
+                   <td>{{ profit(10000) | currency  }}</td>
+                 </tr>
+                 <tr>
+                   <td>$25,000</td>
+                   <td>{{ newAmt(25000) | currency  }}</td>
+                   <td>{{ profit(25000) | currency  }}</td>
+                 </tr>
+                 <tr>
+                   <td>$50,000</td>
+                   <td>{{ newAmt(50000) | currency  }}</td>
+                   <td>{{ profit(50000) | currency  }}</td>
+                 </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-sm-5">
+            <img src="img/btc.png" width="200">
+          </div>
+        </div>
+      </div>
+    
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script type="text/javascript">
+    var bitcoinCalculator = angular.module('bitcoinCalculator', []);
+      bitcoinCalculator.controller('bitcoinController', function ($scope, $http){
+        // attaching 0 to the DOM
+        $http.get("https://bitpay.com/api/rates")
+        .success(function(data){  
+          $scope.rates = data;
+          for(var i=0; i<data.length; i++){
+            if (data[i].code == "USD"){
+              $scope.currRate = data[i].rate;
+            }
+          }
+          $scope.initalAmt  = 5000;
+          $scope.newAmt     = function(price){return price/$scope.currRate * $scope.initalAmt;}
+          $scope.profit     = function(price){return price/$scope.currRate * $scope.initalAmt - $scope.initalAmt;}
+        });
+      });
+    </script>
+
   </body>
 </html>
