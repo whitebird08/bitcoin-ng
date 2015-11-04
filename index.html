@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- stylesheets -->
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
-    <!-- scripts -->
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.css">
+    
   </head>
   <body>
   <div class="jumbotron">
@@ -36,7 +38,7 @@
               <tbody>
                 <tr>
                    <td>$1,000</td>
-                   <td>{{ newAmt(1000) | currency }}</td>
+                   <td>{{ newAmt(1000) | currency  }}</td>
                    <td>{{ profit(1000) | currency  }}</td>
                  </tr>
                  <tr>
@@ -66,30 +68,41 @@
             <img src="img/btc.png" width="200">
           </div>
         </div>
-      </div>
+
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <nvd3-historical-bar-chart height="350" data="exampleData" showXAxis="true" showYAxis="true" showLegend="true">
+            </nvd3-historical-bar-chart>
+          </div>
+        </div>
+        </div>
+
+       <!--  <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <nvd3-line-chart
+              data="bitcoinHistoricalData"
+              xAxisTickFormat="xAxisTickFormatFunction()"
+              height="350"
+              showXAxis="true"
+              showYAxis="true"
+              isArea="true"
+              useInteractiveGuideLine="true">
+            <svg></svg>
+          </div>
+        </div> -->
+
+      <!-- </div> -->
     
 
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-    <script type="text/javascript">
-    var bitcoinCalculator = angular.module('bitcoinCalculator', []);
-      bitcoinCalculator.controller('bitcoinController', function ($scope, $http){
-        // attaching 0 to the DOM
-        $http.get("https://bitpay.com/api/rates")
-        .success(function(data){  
-          $scope.rates = data;
-          for(var i=0; i<data.length; i++){
-            if (data[i].code == "USD"){
-              $scope.currRate = data[i].rate;
-            }
-          }
-          $scope.initalAmt  = 5000;
-          $scope.newAmt     = function(price){return price/$scope.currRate * $scope.initalAmt;}
-          $scope.profit     = function(price){return price/$scope.currRate * $scope.initalAmt - $scope.initalAmt;}
-        });
-      });
-    </script>
+ <!-- scripts -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+  <script type="text/javascript" src="main.js"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-nvd3-directives/0.0.7/angularjs-nvd3-directives.min.js"></script>
+
 
   </body>
 </html>
